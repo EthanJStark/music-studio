@@ -4,3 +4,9 @@
 [submodule "pimidipy"]
 	path = pimidipy
 	url = https://github.com/BlokasLabs/pimidipy
+[submodule "patchbox-modules"]
+	path = patchbox-modules
+	url = https://github.com/BlokasLabs/patchbox-modules.git
+[submodule "patchbox-os"]
+	path = patchbox-os
+	url = https://github.com/BlokasLabs/patchbox-os-gen.git
