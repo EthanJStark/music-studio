@@ -17,6 +17,7 @@ This repo is both:
   - Roland TR-6S
 - **Controllers**
   - Akai APC40
+  - Novation Impulse 61
 - **Audio I/O / mixing / recording**
   - Novation Scarlett 18i20
   - Yamaha MG16XU
@@ -38,16 +39,17 @@ Summit is the primary midi controller and sound generator
 
 ## Where to look in this repo (map)
 
-- **Akai Force manual (owned)**: `claude_docs/force_chunks/` (preferred) or `claude_docs/force.md` (full)
-- **DROP manual (reference-only)**: `claude_docs/drop_chunks/` (preferred) or `claude_docs/drop.md` (full)
-- **Midihub docs (reference-only)**: `midihub-docs/docs/` (MIDI “pipes” and routing ideas)
+- **Akai Force manual (owned)**: `pymupdf_docs/force/force_chunks/` (preferred) or `pymupdf_docs/force/force.md` (full)
+- **DROP manual (reference-only)**: `pymupdf_docs/drop/drop_chunks/` (preferred) or `pymupdf_docs/drop/drop.md` (full)
+- **Novation Summit manual (owned)**: `pymupdf_docs/summit/summit_chunks/` (preferred) or `pymupdf_docs/summit/summit.md` (full)
+- **Midihub docs (reference-only)**: `midihub-docs/docs/` (MIDI "pipes" and routing ideas)
 - **Patchbox OS / modules (Pi)**: `patchbox-os/`, `patchbox-modules/`
 - **MIDI scripting library (Pi / ALSA)**: `pimidipy/`
 
 ## How I use these docs (quick workflow)
 
-- **Need to do something on Force**: search within `claude_docs/force_chunks/**` first; keep page numbers when you quote.
-- **Need a MIDI processing idea**: skim `midihub-docs/docs/**` for a “pipe” that matches the behavior, then re-implement on the Pi.
+- **Need to do something on Force**: search within `pymupdf_docs/force/force_chunks/**` first; keep page numbers when you quote.
+- **Need a MIDI processing idea**: skim `midihub-docs/docs/**` for a "pipe" that matches the behavior, then re-implement on the Pi.
 - **Need to run it headless on the Pi**: prefer Patchbox OS modules/config patterns from `patchbox-os/` / `patchbox-modules/`.
 
 ## Next pages to add (suggested)
