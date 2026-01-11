@@ -1,3 +1,5 @@
+# Initial Prompt
+
 I've created this repository as a scratch pad and brainstorming zone to reimagine my studio to solve workflow and routing challenges, and to brainstorm software that I might write for the Raspberry Pi.
 
 When I initially purchased the Raspberry Pi, I had been contemplating purchasing the midihub. I really wanted to be able to press a single note on my bi-timbral Novation Summit synthesizer and for the result to be either a droning bass or a bass playing an arpeggiated pattern in one timbre. The arpeggiated chord would adhere to whatever key and mode is set, for example if "ionian C" was set, a C note would trigger C major triad arpeggiated, a D note would trigger D minor, etc.
@@ -12,3 +14,13 @@ The con to that approach is that the interface is somewhat clunky; we may be abl
 I brought in the manual for the Drop /Users/ethan.stark/dev/misc/audio-midi/claude_docs/CLAUDE.md because it seems like such an innovative product, and reverse-engineering some of its functionality using my hardware may be a future project for me.
 
 While I may perform live in the future, I don't currently have a specific plan to; this is a hobby project.
+
+# Brainstorming Question. 2
+
+A) Surprises that inspire - The system does something unexpected but musically useful (controlled randomness, generative elements, probability-based variations)
+
+B) Invisible assistance - The system helps you sound good without thinking about it (smart quantization, automatic harmonic following, context-aware parameter adjustments)
+
+C) Superhuman control - Being able to manipulate multiple parameters/devices simultaneously in ways that would be physically impossible otherwise (cross-device modulation, gesture-based orchestration)
+
+D) Morphing soundscapes - Creating evolving, moving textures that change over time without constant hands-on tweaking (LFOs on steroids, slowly shifting routing/effects)
