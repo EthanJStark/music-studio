@@ -1,0 +1,21 @@
+# Python virtual environments
+pymupdf-venv/
+venv/
+env/
+*.pyc
+__pycache__/
+
+# OS-specific
+.DS_Store
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+
+# Temp/build artifacts
+*.egg-info/
+dist/
+build/
