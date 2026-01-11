@@ -1,0 +1,6 @@
+[submodule "midihub-docs"]
+	path = midihub-docs
+	url = https://github.com/BlokasLabs/midihub-docs.git
+[submodule "pimidipy"]
+	path = pimidipy
+	url = https://github.com/BlokasLabs/pimidipy
