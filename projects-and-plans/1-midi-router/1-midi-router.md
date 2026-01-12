@@ -3,6 +3,7 @@
 ## Project Overview
 
 Build a Python-based MIDI routing system running on Raspberry Pi (Patchbox OS) that:
+
 1. Eliminates MIDI feedback loops between Akai Force and Novation Summit
 2. Automatically detects Summit patch types (Single/Multi) and adjusts routing
 3. Provides foundation for future creative features (Dato Duo sync, Impulse integration, etc.)
@@ -14,6 +15,7 @@ Phase 1 delivers a production-ready Python MIDI routing system running as a syst
 ### Key Deliverables
 
 **1. Core Routing Engine (`midi_router.py`)**
+
 - 4-port MIDI router using pimidipy library
 - Bidirectional routing: Summit controller → Force sequencer → Summit sound engine
 - Anti-loop protection: Source tracking prevents messages from routing back to origin
@@ -21,6 +23,7 @@ Phase 1 delivers a production-ready Python MIDI routing system running as a syst
 - Debug logging: All routing decisions logged for troubleshooting
 
 **2. Intelligent Patch Management (`patch_manager.py`)**
+
 - Automatic patch detection: Listens for Summit Program Change messages
 - Single/Multi mode routing:
   - **Single Patch Mode**: Force Ch 1 and Ch 2 both route to Summit Ch 1
@@ -29,17 +32,20 @@ Phase 1 delivers a production-ready Python MIDI routing system running as a syst
 - Optional learning mode: Auto-detect patch types from MIDI traffic patterns
 
 **3. Duplicate Detection (`message_cache.py`)**
+
 - 50ms time window for duplicate filtering
 - Ring buffer (100 message capacity) for efficient lookups
 - Signature-based matching: (message_type, channel, note/cc_number, velocity/value)
 - Prevents double notes and feedback loops
 
 **4. Configuration Management**
+
 - JSON-based config for port mappings, feature flags, cache settings, logging
 - Patch library (`summit-patches.json`) - extensible patch database
 - Routing rules framework for custom routing logic (future expansion)
 
 **5. System Integration**
+
 - Systemd service (`midi-router.service`) with auto-restart on failure
 - Auto-start on boot: Launches automatically when Pi powers on
 - Rotating logs: 10MB max per file, 5 backup files retained
@@ -48,12 +54,14 @@ Phase 1 delivers a production-ready Python MIDI routing system running as a syst
 ### Problem Solved
 
 **Before Phase 1:**
+
 - Summit and Force connected via USB MIDI create feedback loops
 - Double notes/hanging notes from circular message routing
 - Program changes cause system hangs
 - Cannot reliably sequence Summit Multi patches from Force
 
 **After Phase 1:**
+
 - Clean bidirectional MIDI flow with guaranteed loop prevention
 - Seamless Summit patch changes without interruption
 - Automatic routing adaptation based on Single vs Multi patch type
@@ -73,6 +81,7 @@ Phase 1 delivers a production-ready Python MIDI routing system running as a syst
 **Current:** Summit ↔ Force via USB MIDI (bidirectional, causes loops)
 
 **New:**
+
 ```
 Summit DIN Out → Pi MIDI In 1 (pimidi0:0) → Routing Logic → Pi MIDI Out 1 (pimidi0:1) → Force DIN In
 Force DIN Out → Pi MIDI In 2 (pimidi1:0) → Routing Logic → Pi MIDI Out 2 (pimidi1:1) → Summit DIN In
@@ -80,6 +89,7 @@ TR-6S USB → Force USB (unchanged - works reliably for clock sync)
 ```
 
 **Summit Configuration:**
+
 - Local mode: "Seq" (Settings Page 5/V)
 - Global Chan: 1
 - Part A Chan: 1
@@ -108,6 +118,7 @@ TR-6S USB → Force USB (unchanged - works reliably for clock sync)
 ### 1.1 Core Routing Engine (`midi_router.py`)
 
 **Responsibilities:**
+
 - Initialize pimidipy with 4 MIDI ports (2 IN, 2 OUT)
 - Register callbacks for each input port
 - Classify messages (Note On/Off, CC, Program Change, Clock, SysEx)
@@ -117,6 +128,7 @@ TR-6S USB → Force USB (unchanged - works reliably for clock sync)
 - Log all routing decisions (debug mode)
 
 **Key Implementation Details:**
+
 ```python
 from pimidipy import PimidiPy, NoteOnEvent, NoteOffEvent, ProgramChangeEvent, ControlChangeEvent
 from patch_manager import PatchManager
@@ -177,6 +189,7 @@ class MIDIRouter:
 ```
 
 **Anti-Loop Strategy:**
+
 - Tag messages with source port when entering cache
 - Never route message back to its source port
 - Time-based cache (50ms window) for duplicate detection
@@ -185,12 +198,14 @@ class MIDIRouter:
 ### 1.2 Patch Manager (`patch_manager.py`)
 
 **Responsibilities:**
+
 - Load Summit patch library from JSON
 - Track current patch number and type (Single/Multi)
 - Provide routing rules based on current patch
 - Learning mode: auto-detect patch types from observed MIDI traffic
 
 **Patch Library Format (`summit-patches.json`):**
+
 ```json
 {
   "patches": {
@@ -206,10 +221,12 @@ class MIDIRouter:
 **Routing Logic:**
 
 **Single Patch Mode:**
+
 - Force Track 1 (Ch 1) → Summit Ch 1 ✓
 - Force Track 2 (Ch 2) → Merge to Summit Ch 1 ✓
 
 **Multi Patch Mode:**
+
 - Force Track 1 (Ch 1) → Summit Part A (Ch 1) ✓
 - Force Track 2 (Ch 2) → Summit Part B (Ch 2) ✓
 
@@ -245,6 +262,7 @@ class PatchManager:
 ```
 
 **Learning Mode (Optional Phase 1.5):**
+
 - Monitor MIDI traffic after Program Change
 - If see activity on both Ch 1 and Ch 2 within 5 seconds → likely Multi
 - If see activity only on Ch 1 → likely Single
@@ -253,6 +271,7 @@ class PatchManager:
 ### 1.3 Message Cache (`message_cache.py`)
 
 **Responsibilities:**
+
 - Maintain ring buffer of recent messages (last 100 messages, 50ms window)
 - Detect duplicates based on message signature
 - Track message source for anti-loop protection
@@ -362,6 +381,7 @@ WantedBy=multi-user.target
 ```
 
 **Installation:**
+
 ```bash
 sudo cp systemd/midi-router.service /etc/systemd/system/
 sudo systemctl daemon-reload
@@ -376,155 +396,22 @@ pimidipy>=1.0.0
 python-dotenv>=0.19.0
 ```
 
-## Phase 2: Impulse 61 Drum Pads (Deferred)
+## Future Phases
 
-**Goal:** Map Impulse drum pads to TR-6S drums and Force drum tracks
+Phase 1 establishes the core routing engine. Future phases build upon this foundation:
 
-**Implementation:**
-- Add Impulse USB → Pi USB connection
-- New module: `impulse_mapper.py`
-- Config: `config/impulse-mappings.json` (pad # → note # + channel)
-- Route Impulse pad hits to Force (for TR-6S control via USB)
-- Optional: Direct routing to other devices
+- **[Phase 2: Impulse 61 Drum Pads](../2-impulse-drum-pads/2-impulse-drum-pads.md)** - Map Impulse drum pads to TR-6S drums and Force drum tracks
+- **[Phase 3: Perpendicular Keyboard Setup](../3-perpendicular-keyboard/3-perpendicular-keyboard.md)** - Impulse keybed controls Summit Part A, Summit keybed controls Part B
+- **[Phase 4: Dato Duo Quick-Connect](../4-dato-duo-sync/4-dato-duo-sync.md)** - Frictionless jamming with 6yo son through instant sync and routing (Priority after Phase 1)
 
-**Config example:**
-```json
-{
-  "drum_pads": {
-    "pad_1": {"note": 36, "channel": 10, "target": "force"},
-    "pad_2": {"note": 38, "channel": 10, "target": "force"},
-    ...
-  }
-}
-```
-
-## Phase 3: Perpendicular Keyboard Setup (Deferred)
-
-**Goal:** Impulse keybed controls Summit Part A, Summit keybed controls Part B
-
-**Implementation:**
-- Add Impulse USB → Pi USB connection
-- New module: `keyboard_splitter.py`
-- Config: Define which keyboard controls which Part
-- Optional: Transpose/octave shift per keyboard
-
-**Routing:**
-```
-Impulse keys → Pi → Summit Part A (Ch 1)
-Summit keys → Pi → Summit Part B (Ch 2)
-Both → Pi → Force (for recording)
-```
-
-## Phase 4: Dato Duo Quick-Connect (Priority After Phase 1)
-
-**Goal:** Make jamming with 6yo son frictionless - instant sync and routing
-
-**Problem Solved:**
-- Dato Duo sync issues when connecting mid-session
-- Tedious setup prevents spontaneous jam sessions
-
-**Implementation:**
-
-### 4.1 Dato Module (`dato_manager.py`)
-
-**Responsibilities:**
-- Detect Dato Duo connection (hot-plug)
-- Automatically route MIDI clock from Force to Dato
-- Route Dato notes to Force for recording
-- Optional: Route Dato to control other synths
-
-**Key Features:**
-- "Kid Mode" preset: One-touch setup for quick sessions
-- Auto-start when Dato detected
-- Visual/audio feedback when connected
-
-### 4.2 Physical Connection
-
-**Option A: MIDI DIN via Pi**
-```
-Dato Duo DIN Out → Pi MIDI In 3 (pimidi2:0)
-Pi MIDI Out 3 (pimidi2:1) → Dato Duo DIN In
-```
-
-**Option B: USB MIDI (if Dato has USB)**
-```
-Dato Duo USB → Pi USB
-```
-
-### 4.3 Routing Logic
-
-**On Dato connection detected:**
-1. Send MIDI Clock from Force → Dato (via Pi)
-2. Route Dato notes → Force (for recording/sequencing)
-3. Optional: Route Dato → Summit/reface for sound control
-4. Log: "Dato Duo connected - ready to jam!"
-
-**Config (`config/dato-config.json`):**
-```json
-{
-  "auto_connect": true,
-  "sync_clock": true,
-  "route_to": ["force"],
-  "kid_mode": {
-    "enabled": true,
-    "presets": {
-      "simple": {
-        "dato_channel": 3,
-        "force_track": 5,
-        "tempo_sync": true
-      }
-    }
-  }
-}
-```
-
-### 4.4 Implementation Details
-
-```python
-class DatoManager:
-    def __init__(self, config):
-        self.config = config
-        self.dato_connected = False
-        self.dato_input = None
-        self.dato_output = None
-
-    def on_port_change(self, event):
-        """Handle Dato hot-plug detection"""
-        if 'Dato' in event.port_name and event.event_type == 'PORT_START':
-            self.connect_dato()
-
-    def connect_dato(self):
-        """Auto-setup Dato routing"""
-        self.dato_input = self.pimidipy.open_input('Dato Duo')
-        self.dato_output = self.pimidipy.open_output('Dato Duo')
-
-        # Register callback for Dato notes
-        self.dato_input.add_callback(self.handle_dato_input)
-
-        # Start clock forwarding
-        if self.config['sync_clock']:
-            self.force_input.add_callback(self.forward_clock_to_dato)
-
-        self.dato_connected = True
-        self.log_info("🎵 Dato Duo connected - ready to jam!")
-
-    def handle_dato_input(self, event):
-        """Route Dato notes to configured targets"""
-        for target in self.config['route_to']:
-            if target == 'force':
-                self.force_output.write(event)
-
-    def forward_clock_to_dato(self, event):
-        """Forward MIDI clock to Dato"""
-        if isinstance(event, (ClockEvent, StartEvent, StopEvent, ContinueEvent)):
-            self.dato_output.write(event)
-```
+Each phase is documented in its own directory with detailed implementation plans.
 
 ## Verification & Testing
 
 ### Phase 1 Testing
 
 **1. Basic Connectivity**
+
 ```bash
 # Check MIDI ports recognized
 python3 -c "from pimidipy import PimidiPy; p = PimidiPy(); print([port.name for port in p.list_ports()])"
@@ -534,18 +421,21 @@ python3 -c "from pimidipy import PimidiPy; p = PimidiPy(); print([port.name for 
 ```
 
 **2. Loop Prevention**
+
 - Play note on Summit
 - Verify: Single note heard (not double)
 - Verify: Note captured in Force clip
 - Check log: No duplicate messages
 
 **3. Program Change Routing**
+
 - Change Summit patch from panel (Local On temporarily for testing)
 - Verify: Patch changes on Summit
 - Verify: No loop or hang
 - Check log: Program Change detected and routed
 
 **4. Single/Multi Patch Auto-Detection**
+
 - Load Single patch on Summit
 - Play notes on Force Track 2 (Ch 2)
 - Verify: Notes sound (merged to Ch 1)
@@ -555,11 +445,13 @@ python3 -c "from pimidipy import PimidiPy; p = PimidiPy(); print([port.name for 
 - Verify: Independent timbres sound correctly
 
 **5. Long-Run Stability**
+
 - Run for 1 hour continuous play
 - Monitor log for errors
 - Check latency: Should remain <1ms
 
 **6. Service Auto-Start**
+
 ```bash
 sudo systemctl status midi-router
 # Should show: active (running)
@@ -570,29 +462,10 @@ sudo systemctl status midi-router
 # Should show: active (running)
 ```
 
-### Phase 4 Testing (Dato Duo)
-
-**1. Hot-Plug Detection**
-- Start with Dato disconnected
-- Connect Dato Duo USB/MIDI
-- Verify: Log message "Dato Duo connected"
-- Verify: MIDI clock syncing
-
-**2. Jam Session Workflow**
-- Son plays notes on Dato
-- Verify: Notes recorded in Force
-- Verify: Dato stays in sync with Force tempo
-- Change Force tempo → Verify Dato follows
-
-**3. Kid Mode Preset**
-- Activate "simple" preset
-- Verify: Dato routed to Force Track 5
-- Verify: Tempo sync active
-- Verify: Easy to start/stop
-
 ## Success Criteria
 
 **Phase 1:**
+
 - ✅ No more double notes when playing Summit
 - ✅ Can change Summit patches without hanging
 - ✅ Force can record from Summit cleanly
@@ -600,15 +473,14 @@ sudo systemctl status midi-router
 - ✅ System auto-starts on Pi boot
 - ✅ Logs show clean operation (no errors under normal use)
 
-**Phase 4:**
-- ✅ Dato connects instantly when plugged in
-- ✅ Dato stays in perfect sync with Force
-- ✅ Son can start jamming within 10 seconds of connection
-- ✅ No technical troubleshooting required during creative moments
+**Future Phases:**
+
+- See individual phase documents for specific success criteria
 
 ## Future Expansion Points
 
 The modular architecture supports adding:
+
 - **Harmonizer/Arpeggiator modules** - Process incoming notes (inspired by Midihub pipes)
 - **Creative routing modes** - Probability-based routing, generative patterns
 - **Web dashboard** - Real-time MIDI monitor, config editor
