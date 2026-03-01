@@ -39,9 +39,11 @@ Summit is the primary midi controller and sound generator
 
 ## Where to look in this repo (map)
 
+- **Studio connections (MIDI + audio routing)**: `CONNECTIONS.md`
 - **Akai Force manual (owned)**: `pymupdf_docs/force/force_chunks/` (preferred) or `pymupdf_docs/force/force.md` (full)
-- **DROP manual (reference-only)**: `pymupdf_docs/drop/drop_chunks/` (preferred) or `pymupdf_docs/drop/drop.md` (full)
 - **Novation Summit manual (owned)**: `pymupdf_docs/summit/summit_chunks/` (preferred) or `pymupdf_docs/summit/summit.md` (full)
+- **Novation Impulse 61 manual (owned)**: `pymupdf_docs/impulse/impulse_chunks/` (preferred) or `pymupdf_docs/impulse/impulse.md` (full)
+- **DROP manual (reference-only)**: `pymupdf_docs/drop/drop_chunks/` (preferred) or `pymupdf_docs/drop/drop.md` (full)
 - **Midihub docs (reference-only)**: `midihub-docs/docs/` (MIDI "pipes" and routing ideas)
 - **Patchbox OS / modules (Pi)**: `patchbox-os/`, `patchbox-modules/`
 - **MIDI scripting library (Pi / ALSA)**: `pimidipy/`
@@ -54,6 +56,5 @@ Summit is the primary midi controller and sound generator
 
 ## Next pages to add (suggested)
 
-- **Audio routing**: what’s plugged into the Scarlett vs MG16XU vs Zoom L6, and why
-- **MIDI routing**: Force/TR-6S/Summit/reface/Dato/APC40 + Pi TRS MIDI HAT mappings
+- **CONNECTIONS.md (in progress)**: fill in TR-6S, reface CS, Dato Duo, APC40, Pi TRS MIDI HAT MIDI routing; fill in Summit/TR-6S/MG16XU/Zoom L6 audio routing
 - **Pi projects**: small, composable services (MIDI router/filter, clock tools, bridge scripts, etc.)
