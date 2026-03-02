@@ -13,6 +13,22 @@ All USB-MIDI connections run through the **Akai Force** as the central hub.
 | Novation Summit | USB MIDI (Force ↔ Summit) | Bidirectional | Force sequences Summit; Summit also acts as primary keyboard controller sending notes/CCs back to Force |
 | Novation Impulse 61 | USB MIDI (Force ↔ Impulse) | Bidirectional | Impulse is a keyboard controller; sends notes/CCs to Force. Bidirectional allows Force to control Impulse's motorized faders / pad lights |
 
+### Summit Bi-timbral Setup (Multi Patch mode)
+
+Summit runs in **Multi Patch mode** with two independently controlled parts:
+
+| Force Track | MIDI Input Port | MIDI Input Ch | MIDI Output Port | MIDI Output Ch | Role |
+|---|---|---|---|---|---|
+| Summit A | Summit | 2 | Summit | 2 | Summit keybed → Part A |
+| Summit B | Impulse | 1 | Summit | 3 | Impulse → Part B |
+
+**Summit settings:**
+- `Settings → MIDI Channel → PartA Chan`: 2
+- `Settings → MIDI Channel → PartB Chan`: 3
+- `Settings → Local`: **Seq** — keybed sends MIDI out but engine only responds to MIDI returning from Force (prevents double-triggering)
+
+---
+
 ### Devices not yet mapped
 
 The following owned devices are not yet documented with specific MIDI routing:
